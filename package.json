@@ -1,0 +1,20 @@
+{
+  "name": "in-class-project",
+  "version": "0.0.0",
+  "description": "Js frameworks in class project from georgian college",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "dev": "nodemon index"
+  },
+  "author": "Nicolas Vicente",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.0.2"
+  }
+}
