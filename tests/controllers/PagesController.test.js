@@ -11,3 +11,13 @@ describe("PagesController", () => {
     });
   });
 });
+
+describe("PagesController", () => {
+  describe("GET /", () => {
+    it("Should respond with the about view.", async () => {
+      const response = await request(app).get("/about");
+
+      expect(response.statusCode).toBe(200);
+    });
+  });
+});
