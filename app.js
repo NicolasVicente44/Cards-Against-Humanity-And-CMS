@@ -1,8 +1,9 @@
 import express from "express";
 import PageRoutes from "./routes/PagesRoutes.js";
-import { loadingMiddleware } from "./middlewares/loadingMiddleware.js";
+// import { loadingMiddleware } from "./middlewares/loadingMiddleware.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import CardRoutes from "./routes/CardRoutes.js";
 
 dotenv.config();
 
@@ -22,24 +23,38 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//use middleware, in this case ...
+app.use((req, _, next) => {
+  if (req.body && typeof req.body === "object" && "_method" in req.body) {
+    const method = req.body._method;
+
+    delete req.body._method;
+
+    req.method = method;
+  }
+
+  next();
+});
+
 //use middleware, in this case loading middleware
-app.use(loadingMiddleware);
+// app.use(loadingMiddleware);
 
 //use router, in this case page router
 app.use("/", PageRoutes);
+app.use("/cards", CardRoutes);
 
 // Error handler middleware
-app.use((error, req, res, next) => {
+app.use((error, _, res, __) => {
   if (typeof error === "string") {
     error = new Error(error);
   }
 
-  if (!error.status) error.status = 500;
+  if (!error.status) error.status = 404;
 
   console.error(error);
 
-  // Call the next middleware in the chain
-  next(error);
+  res.status(error.status).send(error.message);
 });
+
 
 export default app;

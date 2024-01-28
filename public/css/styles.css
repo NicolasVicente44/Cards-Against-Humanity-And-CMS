@@ -1,0 +1,22 @@
+.standard-link {
+  border: none;
+  background-color: transparent;
+  color: rgba(var(--bs-link-color-rgb), var (--bs--link-opacity, 1));
+  text-decoration: underline;
+  display: inline;
+}
+
+.ca-card {
+  width: 200px;
+  height: 250px;
+  margin: 10px;
+}
+
+.ca-card .card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4em;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
