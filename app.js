@@ -1,21 +1,17 @@
 import express from "express";
-import PageRoutes from "./routes/PagesRoutes.js";
-// import { loadingMiddleware } from "./middlewares/loadingMiddleware.js";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
-import CardRoutes from "./routes/CardRoutes.js";
+import MongooseSetup from "./lib/MongooseSetup.js";
+import RoutesSetup from "./lib/RoutesSetup.js";
+import PassportSetup from "./lib/PassportSetup.js";
 
 dotenv.config();
 
-//connection to mongo using mongoose
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.MONGO_USER_NAME}:${process.env.MONGO_USER_PASS}@${process.env.MONGO_DATABASE}.u2pa692.mongodb.net/?retryWrites=true&w=majority`
-  )
-  .then(() => console.info("MongoDB connected"))
-  .catch((error) => console.log(error));
+MongooseSetup();
 
 const app = express();
+
+//call passport setup method for project auth
+PassportSetup(app);
 
 //set ejs, view engine and other configurations
 app.set("view engine", "ejs");
@@ -36,12 +32,7 @@ app.use((req, _, next) => {
   next();
 });
 
-//use middleware, in this case loading middleware
-// app.use(loadingMiddleware);
-
-//use router, in this case page router
-app.use("/", PageRoutes);
-app.use("/cards", CardRoutes);
+RoutesSetup(app);
 
 // Error handler middleware
 app.use((error, _, res, __) => {
@@ -55,6 +46,5 @@ app.use((error, _, res, __) => {
 
   res.status(error.status).send(error.message);
 });
-
 
 export default app;
