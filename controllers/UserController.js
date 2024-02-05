@@ -1,4 +1,4 @@
-import { error } from "console";
+//import { error } from "console";
 import User from "../models/User";
 import fs, { copyFileSync } from "fs";
 
