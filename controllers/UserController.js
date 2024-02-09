@@ -1,40 +1,13 @@
-//import { error } from "console";
-import User from "../models/User";
-import fs, { copyFileSync } from "fs";
+import User from "../models/User.js";
+import fs from "fs";
 
-//helper function to find and verify user
-async function findAndVerifyUser(req) {
-  const user = await User.findById(req.params.id);
-
-  if (!user) {
-    req.status = 404;
-    throw new Error("User does not exist");
-  }
-
-  return user;
-}
-
-// Helper function to extract and filter specific parameters from the request body.
-// If a file is attached to the request, it assigns it to the 'avatar' property.
-function getStrongParams(req) {
-  // Check if a file is attached to the request
-  if (req.file) {
-    // If a file exists, assign it to the 'avatar' property in the request body
-    req.body.avatar = req.file;
-  }
-
-  // Destructure specific properties from the request body
-  const { id, firstName, lastName, nickname, email, avatar, password } =
-    req.body;
-
-  // Return an object containing the extracted properties
-  return { id, firstName, lastName, nickname, email, avatar, password };
-}
-
-export const index = async (req, res, next) => {
+// Function to display a list of Users (admin access only)
+export const index = async (_, res, next) => {
   try {
+    // Retrieve a list of all users from the database
     const users = await User.find();
 
+    // Render the user list page with the retrieved data
     res.render("users/index", {
       title: "List of Users",
       users,
@@ -44,11 +17,14 @@ export const index = async (req, res, next) => {
   }
 };
 
+// Function to display a User's profile (admin access only)
 export const show = async (req, res, next) => {
   try {
+    // Find and verify a user based on the provided request parameters
     const user = await findAndVerifyUser(req);
 
-    res.render("users/show", {
+    // Render the user's profile page with the retrieved user data
+    res.render("cards/show", {
       user,
       title: "User View",
     });
@@ -57,8 +33,10 @@ export const show = async (req, res, next) => {
   }
 };
 
+// Function to display a CMS interface for adding a new User
 export const add = async (req, res, next) => {
   try {
+    // Render the user addition form page
     res.render("users/add", {
       formType: "create",
       title: "New User",
@@ -68,10 +46,13 @@ export const add = async (req, res, next) => {
   }
 };
 
+// Function to display a CMS interface for updating an existing User
 export const edit = async (req, res, next) => {
   try {
+    // Find and verify a user based on the provided request parameters
     const user = await findAndVerifyUser(req);
 
+    // Render the user editing form page with the retrieved user data
     res.render("users/edit", {
       user,
       formType: "update",
@@ -82,20 +63,21 @@ export const edit = async (req, res, next) => {
   }
 };
 
+// Function to create a new User based on form input
 export const create = async (req, res, next) => {
   try {
+    // Extract and validate user input from the request
     const { firstName, lastName, nickname, email, password, avatar } =
       getStrongParams(req);
-    const user = new User({
-      firstName,
-      lastName,
-      nickname,
-      email,
-    });
 
+    // Create a new User instance with the provided data
+    const user = new User({ firstName, lastName, nickname, email });
+
+    // Validate user data and check for errors
     const validationErrors = user.validateSync();
 
     if (validationErrors) {
+      // Handle validation errors and display them to the user
       if (avatar && fs.existsSync(avatar.path)) {
         fs.unlinkSync(avatar.path);
       }
@@ -109,34 +91,45 @@ export const create = async (req, res, next) => {
       throw new Error(message.join("\n"));
     }
 
+    // Handle user avatar (if provided)
     if (avatar && fs.existsSync(avatar.path)) {
-      copyFileSync(avatar.path, `avatars/${avatar.filename}`);
+      fs.copyFileSync(avatar.path, `avatars/${avatar.filename}`);
       fs.unlinkSync(avatar.path);
       user.avatar = avatar.filename;
     }
 
+    // Register the user with Passport's User.register method
     await User.register(user, password);
 
+    // Redirect to the user list page after successful user creation
     res.redirect("/users");
   } catch (error) {
+    console.error(error);
     next(error);
   }
 };
 
+// Function to update an existing User based on form input
 export const update = async (req, res, next) => {
   try {
-    const { firstName, lastName, nickname, email, password, avatar } =
+    // Extract and validate user input from the request
+    const { id, firstName, lastName, nickname, email, password, avatar } =
       getStrongParams(req);
-    const user = await findAndVerifyUser(req);
 
+    // Find and verify a user based on the provided request parameters
+    let user = await findAndVerifyUser(req);
+
+    // Update user properties with the provided data
     user.firstName = firstName;
     user.lastName = lastName;
     user.nickname = nickname;
     user.email = email;
 
+    // Validate user data and check for errors
     const validationErrors = user.validateSync();
 
     if (validationErrors) {
+      // Handle validation errors and display them to the user
       if (avatar && fs.existsSync(avatar.path)) {
         fs.unlinkSync(avatar.path);
       }
@@ -150,39 +143,74 @@ export const update = async (req, res, next) => {
       throw new Error(message.join("\n"));
     }
 
+    // Handle user avatar (if provided)
     if (avatar && fs.existsSync(avatar.path)) {
-      copyFileSync(avatar.path, `avatars/${avatar.filename}`);
+      fs.copyFileSync(avatar.path, `avatars/${avatar.filename}`);
       fs.unlinkSync(avatar.path);
       fs.unlinkSync(`avatars/${user.avatar}`);
       user.avatar = avatar.filename;
     }
 
-    if (password) {
-      await user.setPassword(password);
-    }
-
+    // Save the updated user data
     user.save();
 
+    // Redirect to the user list page after successful user update
     res.redirect("/users");
   } catch (error) {
     next(error);
   }
 };
 
+// Function to remove an existing User
 export const remove = async (req, res, next) => {
   try {
+    // Find and verify a user based on the provided request parameters
     const user = await findAndVerifyUser(req);
 
+    // Delete the user's avatar file (if it exists)
     const filepath = `avatars/${user.avatar}`;
 
     if (fs.existsSync(filepath)) {
       fs.unlinkSync(filepath);
     }
 
+    // Remove the user from the database
     await User.findByIdAndDelete(req.params.id);
 
+    // Redirect to the user list page after successful user removal
     res.redirect("/users");
   } catch (error) {
     next(error);
   }
 };
+
+// Helper function to find and verify a user by their ID
+async function findAndVerifyUser(req) {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    // Handle the case where the user does not exist
+    req.status = 404;
+    throw new Error("User does not exist");
+  }
+
+  return user;
+}
+
+/**
+ * This function is used to ensure that only approved fields are returned and used.
+ *
+ * @param { ExpressRequestObject } req - The Express request object containing user input
+ * @returns { object } - An object containing approved fields
+ */
+function getStrongParams(req) {
+  if (req.file) {
+    req.body.avatar = req.file;
+  }
+
+  // Extract approved fields from the request body
+  const { id, firstName, lastName, nickname, email, avatar, password } =
+    req.body;
+
+  return { id, firstName, lastName, nickname, email, avatar, password };
+}

@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
       required: [true, "You must provide a last name."],
       maxlength: [30, "Your name cannot exceed 30 characters."],
     },
-    nickName: {
+    nickname: {
       type: String,
       required: [true, "You must provide a nickname."],
       maxlength: [30, "Your name cannot exceed 30 characters."],

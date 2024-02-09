@@ -38,6 +38,8 @@ PassportSetup(app);
 // Setting EJS as the view engine and configuring other application settings
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(express.static("avatars"))
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
