@@ -1,58 +1,35 @@
 <%- include("../shared/_header.ejs") %>
 
-<div class="container width mt-5">
-  <h1>User List</h1>
+<div class="container mt-5"> 
+  <h1 class="text-center">User List</h1>
 
   <hr class="my-5" />
 
   <a href="/users/new" class="btn btn-success mb-3">Create a new user</a>
 
-  <table class="table table-striped table-bordered">
-    <thead>
-      <tr>
-        <th>Avatar</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Nickname</th>
-        <th>Email</th>
-        <th>Last Updated</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% if (users && users.length > 0) { %> <% users.forEach(({ id, firstName,
-      lastName, nickname, email, avatar, updatedAt }) => { %>
-      <tr>
-        <td>
-          <img
-            class="img-thumbnail"
-            style="max-width: 100px; max-height: 100px;"
-            src="<%= avatar %>"
-            alt="user avatar image"
-          />
-        </td>
-        <td><%= firstName %></td>
-        <td><%= lastName %></td>
-        <td><%= nickname %></td>
-        <td><%= email %></td>
-        <td><%= updatedAt %></td>
-        <td>
-          <a href="/users/<%= id %>">view</a> |
-          <a href="/users/<%= id %>/edit">edit</a> |
-          <form
-            action="/users/<%= id %>"
-            method="post"
-            onsubmit="return confirm('Are you sure you want to delete this user?')"
-          >
-            <input type="hidden" name="_method" value="delete" />
-            <button class="standard-link" type="submit">delete</button>
-          </form>
-        </td>
-      </tr>
-      <% }) %> <% } %>
-    </tbody>
-  </table>
+  <div class="row">
+    <% if (users && users.length > 0) { %> 
+      <% users.forEach(({ id, firstName, lastName, nickname, email, avatar, updatedAt }) => { %>
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <img class="card-img-top" style="height: auto; width: auto;" src="<%= avatar %>" alt="user avatar image">
+            <div class="card-body">
+              <h5 class="card-title"><%= firstName %> <%= lastName %></h5>
+              <p class="card-text">Nickname: <%= nickname %></p>
+              <p class="card-text">Email: <%= email %></p>
+              <p class="card-text">Last Updated: <%= updatedAt %></p>
+              <a href="/users/<%= id %>" class="btn btn-primary">View</a>
+              <a href="/users/<%= id %>/edit" class="btn btn-secondary">Edit</a>
+              <form action="/users/<%= id %>" method="post" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }) %> 
+    <% } %>
+  </div>
 </div>
 
 <%- include("../shared/footer.ejs") %>

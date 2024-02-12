@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+
 import fs from "fs";
 
 // Function to display a list of Users (admin access only)
@@ -17,6 +18,7 @@ export const index = async (_, res, next) => {
   }
 };
 
+
 // Function to display a User's profile (admin access only)
 export const show = async (req, res, next) => {
   try {
@@ -24,15 +26,14 @@ export const show = async (req, res, next) => {
     const user = await findAndVerifyUser(req);
 
     // Render the user's profile page with the retrieved user data
-    res.render("cards/show", {
+    res.render("users/show", {
       user,
-      title: "User View",
+      title: "User View"
     });
   } catch (error) {
     next(error);
   }
 };
-
 // Function to display a CMS interface for adding a new User
 export const add = async (req, res, next) => {
   try {

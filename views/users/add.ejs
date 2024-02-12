@@ -1,12 +1,12 @@
 <%- include("../shared/_header.ejs") %>
 
-<div class="container mt-5">
+<div class="container mt-5 justify-content-center flex">
   <h1>
     <%= formType === "create" ? "Register New User" : "Update User Profile" %>
   </h1>
   <hr class="my-5" />
   <%- include("./_form") %>
-  <a href="/users">Go back to users</a>
+  <a class="text-center" href="/users">Go back to users</a>
 </div>
 
 <%- include("../shared/footer.ejs") %>

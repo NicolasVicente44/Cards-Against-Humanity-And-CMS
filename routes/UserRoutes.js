@@ -10,6 +10,10 @@ import {
   update,
   remove,
 } from "../controllers/UserController.js";
+import {
+  isAuthenticated,
+  isRole,
+} from "../controllers/AuthenticationController.js";
 
 // Create an instance of the Express Router
 const router = Router();
@@ -26,7 +30,7 @@ const storage = multer.diskStorage({
   },
 
   // Filename function defines how uploaded files should be named
-  filename: (_, file, callback) => {
+  filename: (req, file, callback) => {
     // Generate a unique filename for each uploaded file to prevent conflicts
     // Here, we combine a random hexadecimal key with the original filename
     const filename = `${generateRandomHexKey()}-${file.originalname}`;
@@ -49,25 +53,34 @@ const requestCheck = (req, _, next) => {
 };
 
 // Define routes and associate them with controller actions
-// Routes for the API
-router.get("/", index);
-router.get("/new", add);
-router.get("/:id", show);
-router.get("/:id/edit", edit);
-router.post("/", upload.single("avatar"), create); // Upload avatar file for new user
-router.post("/:id", (req, _, next) => {
-  req.method = "put";
-  next();
-});
-router.put("/:id", upload.single("avatar"), update); // Upload avatar file for updating user
-router.delete("/:id", remove);
 // These routes are used for user management and access control
+
+// Route to display a list of users (admin access only)
+router.get("/", isAuthenticated, isRole("ADMIN"), index);
+
+// Route to display the user registration page
+router.get("/new", add);
+
+// Route to display a user's profile page
+router.get("/:id", isAuthenticated, show);
+
+// Route to display the user editing page
+router.get("/:id/edit", isAuthenticated, edit);
+
+// Route to create a new user
+router.post("/", isAuthenticated, upload.single("avatar"), create);
 
 // Handle issue with multipart forms not having detectable fields unless they've gone through multer
 router.post("/:id", (req, res, next) => {
   req.method = "put"; // Correct the HTTP method for PUT requests
   next();
 });
+
+// Route to update an existing user's information
+router.put("/:id", isAuthenticated, upload.single("avatar"), update);
+
+// Route to delete an existing user (admin access only)
+router.delete("/:id", isAuthenticated, isRole("ADMIN"), remove);
 
 // Function to generate a random hexadecimal key
 function generateRandomHexKey() {

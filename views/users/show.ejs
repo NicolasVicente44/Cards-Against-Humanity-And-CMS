@@ -1,21 +1,26 @@
 <%- include("../shared/_header.ejs") %>
 
-<div class="container mt-5">
-  <h1>User Profile</h1>
+<div class="container d-flex justify-content-center">
+  <div class="mx-auto">
+    <h1 class="mt-5 text-center">User Profile</h1>
 
-  <hr class="my-5" />
+    <hr class="my-5" />
 
-  <a href="/users/<%= user.id %>/edit">Edit User</a>
+    <a href="/users/<%= user.id %>/edit">Edit User</a>
 
-  <div
-    class="user ca-user mt-3 mb-3 <%= user.type === 'QUESTION' ? 'bg-dark text-white' : 'bg-white text-dark' %>"
-    style="width: 18rem; min-height: 18rem"
-  >
-    <div class="user-body">
-      <p class="user-text"><%= user.firstName %> <%= user.lastname %></p>
+    <div class="card mt-3 mb-3" style="width: 18rem">
+      <div class="card-header">User Details</div>
+      <div class="card-body">
+        <p class="card-text">First Name: <%= user.firstName %></p>
+        <p class="card-text">Last Name: <%= user.lastName %></p>
+        <p class="card-text">Nickname: <%= user.nickname %></p>
+        <p class="card-text">Email Address: <%= user.email %></p>
+        <p class="card-text">Role: <%= user.role %></p>
+      </div>
     </div>
+
+    <a href="/users">Back to Users List</a>
   </div>
-  <a href="/users">Back to Cards</a>
 </div>
 
 <%- include("../shared/footer.ejs") %>

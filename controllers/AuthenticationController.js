@@ -1,7 +1,7 @@
 import passport from "passport";
 
-export const login = (_res, req) => {
-  res.render("authentication/login", { title: "Login" });
+export const login = (_, res) => {
+  res.render("authentication/login");
 };
 
 export const authenticate = async (req, res, next) => {

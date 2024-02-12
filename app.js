@@ -1,24 +1,17 @@
-// Importing the 'express' framework for building the web application
 import express from "express";
-// Importing the 'dotenv' library for handling environment variables
 import dotenv from "dotenv";
-// Importing setup functions for MongoDB, routes, and Passport authentication
-import MongooseSetup from "./lib/MongooseSetup.js";
 import RoutesSetup from "./lib/RoutesSetup.js";
+import MongooseSetup from "./lib/MongooseSetup.js";
 import PassportSetup from "./lib/PassportSetup.js";
-// Importing the 'express-session' middleware for session management
 import session from "express-session";
 
-// Loading environment variables from the '.env' file
+// This loads our .env and adds the variables to the environment
 dotenv.config();
 
-// Setting up MongoDB connection using the imported function
-MongooseSetup();
-
-// Creating an instance of the express application
+// This creates our application
 const app = express();
 
-// Configuring session middleware for managing user sessions and adding secret key for user encryption
+// Setup sessions
 app.use(
   session({
     secret: process.env.SECRET_KEY,
@@ -32,18 +25,26 @@ app.use(
   })
 );
 
-// Calling Passport setup method to configure authentication
+// Setup Mongoose
+MongooseSetup();
+
+// Setup Passport
 PassportSetup(app);
 
-// Setting EJS as the view engine and configuring other application settings
+// This sets our view engine (HTML renderer)
 app.set("view engine", "ejs");
-app.use(express.static("public"));
-app.use(express.static("avatars"))
 
+// This sets the public assets folder
+app.use(express.static("public"));
+app.use(express.static("avatars"));
+
+// Middleware to handle JSON
 app.use(express.json());
+
+// Middleware for parsing url-encoded requests
 app.use(express.urlencoded({ extended: true }));
 
-// Using middleware to handle the '_method' property for HTTP method override
+// Method overriding to deal with unsupported HTTP methods in certain platforms
 app.use((req, _, next) => {
   if (req.body && typeof req.body === "object" && "_method" in req.body) {
     const method = req.body._method;
@@ -56,25 +57,27 @@ app.use((req, _, next) => {
   next();
 });
 
-// Setting up routes using the imported function
 RoutesSetup(app);
 
-// Error handler middleware to handle and log errors
+// Our error handler
 app.use((error, _, res, __) => {
-  // If the error is a string, convert it to an Error object
+  // Converts string errors to proper errors
   if (typeof error === "string") {
-    error = new Error(error);
+    const error = new Error(error);
   }
 
-  // If the error has no status, set it to 404 (Not Found)
+  // Adds a generic status
   if (!error.status) error.status = 404;
 
-  // Logging the error to the console
+  // Outputs our error and stack trace to our console
   console.error(error);
 
-  // Sending the appropriate HTTP status and error message in the response
+  // Outputs the error to the user
   res.status(error.status).send(error.message);
 });
 
-// Exporting the configured express application
+/**
+ * We are exporting our application so we are able to use it in
+ * our tests
+ */
 export default app;
