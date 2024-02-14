@@ -68,7 +68,7 @@ router.get("/:id", isAuthenticated, show);
 router.get("/:id/edit", isAuthenticated, edit);
 
 // Route to create a new user
-router.post("/", isAuthenticated, upload.single("avatar"), create);
+router.post("/", upload.single("avatar"), create);
 
 // Handle issue with multipart forms not having detectable fields unless they've gone through multer
 router.post("/:id", (req, res, next) => {

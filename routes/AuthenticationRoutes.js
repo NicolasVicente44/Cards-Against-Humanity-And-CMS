@@ -1,4 +1,9 @@
-import { login, authenticate, logout, isAuthenticated } from "../controllers/AuthenticationController.js";
+import {
+  login,
+  authenticate,
+  logout,
+  isAuthenticated,
+} from "../controllers/AuthenticationController.js";
 import { add } from "../controllers/UserController.js";
 import { Router } from "express";
 

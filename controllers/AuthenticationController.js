@@ -32,16 +32,16 @@ export const isAuthenticated = (req, res, next) => {
 
 export const isRole = (role) => {
   return (req, _, next) => {
-    if (!req.isAuthenticated) {
+    if (!req.isAuthenticated()) {
       req.status = 401;
-
       return next(new Error("NOT AUTHORIZED"));
     }
 
     if (role !== req.user.role) {
       req.status = 403;
-
       return next(new Error("FORBIDDEN"));
     }
+
+    next();
   };
 };
