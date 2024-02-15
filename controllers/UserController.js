@@ -102,7 +102,7 @@ export const create = async (req, res, next) => {
     await User.register(user, password);
 
     // Redirect to the user list page after successful user creation
-    res.redirect("/users");
+    res.redirect("/");
   } catch (error) {
     console.error(error);
     next(error);
