@@ -19,7 +19,7 @@ import {
 const router = Router();
 
 // Configure Multer for file uploads
-const tempStorageLocation = "temp";
+const tempStorageLocation = process.env.TEMP_FILE_STORAGE || "temp";
 
 // Create a storage engine for Multer that defines how and where files should be stored
 const storage = multer.diskStorage({
@@ -83,8 +83,8 @@ router.put("/:id", isAuthenticated, upload.single("avatar"), update);
 router.delete("/:id", isAuthenticated, isRole("ADMIN"), remove);
 
 // Function to generate a random hexadecimal key
-function generateRandomHexKey() {
-  return crypto.randomBytes(8 / 2).toString("hex");
+ export function generateRandomHexKey(length = 8) {
+  return crypto.randomBytes(length / 2).toString("hex");
 }
 
 export default router;

@@ -1,6 +1,10 @@
 import User from "../models/User.js";
 import fs from "fs";
 
+const permanentStorage = "avatars";
+const sleep = async (lengthInMS) =>
+  await new Promise((resolve) => setTimeout(resolve, lengthInMS));
+
 // Function to display a list of Users (admin access only)
 export const index = async (_, res, next) => {
   try {
@@ -93,7 +97,8 @@ export const create = async (req, res, next) => {
 
     // Handle user avatar (if provided)
     if (avatar && fs.existsSync(avatar.path)) {
-      fs.copyFileSync(avatar.path, `avatars/${avatar.filename}`);
+      fs.copyFileSync(avatar.path, `${permanentStorage}/${avatar.filename}`);
+      await sleep(500);
       fs.unlinkSync(avatar.path);
       user.avatar = avatar.filename;
     }
@@ -145,9 +150,10 @@ export const update = async (req, res, next) => {
 
     // Handle user avatar (if provided)
     if (avatar && fs.existsSync(avatar.path)) {
-      fs.copyFileSync(avatar.path, `avatars/${avatar.filename}`);
+      fs.copyFileSync(avatar.path, `${permanentStorage}/${avatar.filename}`);
+      await sleep(500);
       fs.unlinkSync(avatar.path);
-      fs.unlinkSync(`avatars/${user.avatar}`);
+      fs.unlinkSync(`${permanentStorage}/${user.avatar}`);
       user.avatar = avatar.filename;
     }
 
@@ -168,7 +174,7 @@ export const remove = async (req, res, next) => {
     const user = await findAndVerifyUser(req);
 
     // Delete the user's avatar file (if it exists)
-    const filepath = `avatars/${user.avatar}`;
+    const filepath = `${permanentStorage}/${user.avatar}`;
 
     if (fs.existsSync(filepath)) {
       fs.unlinkSync(filepath);

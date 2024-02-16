@@ -25,6 +25,14 @@ app.use(
   })
 );
 
+//set and clear session notification values
+app.use((req, res, next) => {
+  res.locals.notifications = req.session?.notifications;
+  delete req.session?.notifications;
+
+  next();
+});
+
 // Setup Mongoose
 MongooseSetup();
 
