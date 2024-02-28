@@ -12,3 +12,5 @@ export const about = (req, res) => {
     loading: req.loading,
   });
 };
+
+

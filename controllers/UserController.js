@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import fs from "fs";
+import passport from "passport";
 
 const permanentStorage = "avatars";
 const sleep = async (lengthInMS) =>
@@ -67,6 +68,7 @@ export const edit = async (req, res, next) => {
   }
 };
 
+
 // Function to create a new User based on form input
 export const create = async (req, res, next) => {
   try {
@@ -106,8 +108,14 @@ export const create = async (req, res, next) => {
     // Register the user with Passport's User.register method
     await User.register(user, password);
 
-    // Redirect to the user list page after successful user creation
-    res.redirect("/");
+    // Automatically log in the user after successful registration
+    req.login(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      // Redirect to the desired page after successful login
+      res.redirect("/");
+    });
   } catch (error) {
     console.error(error);
     next(error);

@@ -1,15 +1,21 @@
 <%- include("../shared/_header.ejs") %>
 
 <div class="container mt-5">
-  <h1>Card View</h1>
+  <h1 class="m-auto text-center">Card View</h1>
 
   <hr class="my-5" />
 
-  <a href="/cards/<%= card.id %>/edit">Edit Card</a>
+  <div class="d-flex justify-content-center">
+    <a
+      class="btn btn-sm btn-outline-secondary"
+      href="/cards/<%= card.id %>/edit"
+      >Edit Card</a
+    >
+  </div>
 
   <div
-    class="card ca-card mt-3 mb-3 <%= card.type === 'QUESTION' ? 'bg-dark text-white' : 'bg-white text-dark' %>"
-    style="width: 18rem; min-height: 18rem;"
+    class="card ca-card mt-3 rounded mb-3 m-auto <%= card.type === 'QUESTION' ? 'bg-dark text-white rounded-3' : 'bg-white border-dark text-dark rounded-3' %>"
+    style="width: 18rem; min-height: 22rem"
   >
     <div class="card-body">
       <p class="card-text">
@@ -17,7 +23,9 @@
       </p>
     </div>
   </div>
-  <a href="/cards">Back to Cards</a>
+  <div class="d-flex justify-content-center">
+    <a class="btn btn-sm btn-outline-secondary" href="/cards">Back to Cards</a>
+  </div>
 </div>
 
 <%- include("../shared/_footer.ejs") %>
