@@ -1,11 +1,15 @@
 <%- include("../shared/_header.ejs") %>
 
-<div class="container width mt-5">
-  <h1>Cards List</h1>
+<div class="container width mt-5 m-auto">
+  <h1 class="text-center">Cards List</h1>
 
   <hr class="my-5" />
 
-  <a href="/cards/new" class="btn btn-success mb-3">Create a new card</a>
+  <div class="text-center mb-5">
+    <a href="/cards/new" class="btn btn-success text-center mb-3"
+      >Create a new card</a
+    >
+  </div>
 
   <table class="table table-striped table-bordered">
     <thead>
@@ -33,7 +37,7 @@
             onsubmit="return confirm('Are you sure you want to delete this card?')"
           >
             <input type="hidden" name="_method" value="delete" />
-            <button class="standard-link " type="submit">delete</button>
+            <button class="standard-link" type="submit">delete</button>
           </form>
         </td>
       </tr>

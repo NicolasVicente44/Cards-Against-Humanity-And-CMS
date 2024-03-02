@@ -13,4 +13,9 @@ export const about = (req, res) => {
   });
 };
 
-
+export const contact = (req, res) => {
+  res.render("pages/contact", {
+    title: "Contact",
+    loading: req.loading,
+  });
+};

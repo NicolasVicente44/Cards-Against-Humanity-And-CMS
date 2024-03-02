@@ -30,6 +30,12 @@
         </li>
 
         <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/about"
+            >Contact</a
+          >
+        </li>
+
+        <li class="nav-item">
           <a class="nav-link" href="/cards">Cards</a>
         </li>
 
@@ -59,3 +65,16 @@
     </div>
   </div>
 </nav>
+
+<script>
+  // Get the navbar toggler button
+  var navbarToggler = document.querySelector(".navbar-toggler");
+
+  // Get the navbar collapse element
+  var navbarCollapse = document.querySelector(".navbar-collapse");
+
+  // Toggle the collapse class on navbar collapse element when toggler is clicked
+  navbarToggler.addEventListener("click", function () {
+    navbarCollapse.classList.toggle("collapse");
+  });
+</script>
