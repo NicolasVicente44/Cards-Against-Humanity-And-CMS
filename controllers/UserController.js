@@ -22,6 +22,20 @@ export const index = async (_, res, next) => {
   }
 };
 
+
+
+// Update user profile
+export const updateProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedProfile = await User.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(updatedProfile);
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 // Function to display a User's profile (admin access only)
 export const show = async (req, res, next) => {
   try {

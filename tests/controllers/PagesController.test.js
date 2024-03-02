@@ -21,3 +21,14 @@ describe("PagesController", () => {
     });
   });
 });
+
+
+describe("PagesController", () => {
+  describe("GET /", () => {
+    it("Should respond with the contact view.", async () => {
+      const response = await request(app).get("/contact");
+
+      expect(response.statusCode).toBe(200);
+    });
+  });
+});

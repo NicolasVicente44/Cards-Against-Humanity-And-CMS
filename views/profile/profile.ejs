@@ -1,0 +1,25 @@
+<!-- profile.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">First Name: <%= user.firstName %></h5>
+                <h5 class="card-title">Last Name: <%= user.lastName %></h5>
+                <h5 class="card-title">Nickname: <%= user.nickname %></h5>
+                <h5 class="card-title">Email: <%= user.email %></h5>
+                <!-- Add more profile fields here -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

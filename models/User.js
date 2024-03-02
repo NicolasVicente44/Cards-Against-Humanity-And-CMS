@@ -26,6 +26,17 @@ const UserSchema = new mongoose.Schema(
       maxlength: [75, "Your email cannot exceed 75 characters."],
       match: [/\S+@\S+\.\S+/, "Please enter a valid email address."],
     },
+    bio: {
+      type: String,
+      maxlength: [250, "Bio cannot exceed 250 characters."],
+    },
+    dateOfBirth: {
+      type: Date,
+    },
+    address: {
+      type: String,
+      maxlength: [100, "Address cannot exceed 100 characters."],
+    },
     avatar: {
       type: String,
       required: false,
